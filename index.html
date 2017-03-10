@@ -23,16 +23,19 @@
     };
 
     //Armクラス-----------------------
-    var ArmWidth = 100;
-    var ArmHeight = 0;
+    var ARM_WIDTH = 100;
+    var ARM_HEIGHT = 0;
+    var DART_WIDTH = 16;
+    var DART_HEIGHT = 16;
 
-    //TODO:JavaScriptのEnumどうやるんだ
+    //TODO:大文字にする
     var State = {Set:0, RaiseArm:1, BendElbow:2, Throw:3, Finished:4, Max:5};
 
-
-    Arm = function()
+    Arm = function(shootDartFunc)
     {
+        //TODO:初期化をどこかで統一
         this.state = State.RaiseArm;
+        this.throwDart = shootDartFunc;
 
         this.shoulderPos = new Phaser.Point(100, 200);
         this.shoulderAngle = 0;
@@ -57,8 +60,12 @@
             // case State.RaiseArm:
             // break;
 
-            // case State.BendElbow:
-            // break;
+            case State.BendElbow:
+                this.throwDart(100,100,10);//TODO:その時の値を入れる
+                //TODO:共通化
+                this.state++;
+                this.state = this.state % State.Max;
+                break;
 
             // case State.Throw:
             // break;
@@ -70,9 +77,9 @@
                 break;
 
             default:
-                    this.state++;
-                    this.state = this.state % State.Max;
-                    break;
+                this.state++;
+                this.state = this.state % State.Max;
+                break;
         }
     };
 
@@ -84,6 +91,12 @@
         this.refreshImage();
     };
 
+    var TIME_RATE =1;
+    var SETTING_SHOULDER_ANG_VEL = -1 * TIME_RATE;
+    var BENDING_ELBOW_ANG_VEL = -3 * TIME_RATE;
+    var THROWING_SHOULDER_ANG_VEL = -2 * TIME_RATE;
+    var THROWING_ELBOW_ANG_VEL = 10 * TIME_RATE;
+
     Arm.prototype.refreshRelativeAngles = function()
     {
         //TODO Stateパターン
@@ -93,18 +106,16 @@
                 this.init();
                 break;
             case State.RaiseArm:
-                this.shoulderAngle -= 1;
+                this.shoulderAngle += SETTING_SHOULDER_ANG_VEL;
                 break;
 
             case State.BendElbow:
-                this.elbowAngle -= 3;
+                this.elbowAngle += BENDING_ELBOW_ANG_VEL;
                 break;
 
             case State.Throw:
-                var nextShoulderAngle = this.shoulderAngle - 2;
-                var nextElbowAngle = this.elbowAngle + 10;
-                this.shoulderAngle = nextShoulderAngle;
-                this.elbowAngle = nextElbowAngle;
+                this.shoulderAngle += THROWING_SHOULDER_ANG_VEL;
+                this.elbowAngle += THROWING_ELBOW_ANG_VEL;
 
                 if(this.elbowAngle >= 0)
                 {
@@ -140,26 +151,40 @@
         this.upperArm.position = new Phaser.Point(
             this.shoulderPos.x, this.shoulderPos.y);
         this.foreArm.position = new Phaser.Point(
-            this.shoulderPos.x + ArmWidth * Math.cos(toRad(this.upperArm.angle)),
-            this.shoulderPos.y + ArmWidth * Math.sin(toRad(this.upperArm.angle)));
+            this.shoulderPos.x + ARM_WIDTH * Math.cos(toRad(this.upperArm.angle)),
+            this.shoulderPos.y + ARM_WIDTH * Math.sin(toRad(this.upperArm.angle)));
     };
 
-    //-----------------------------
+    //-Armここまで----------------------------
+
+    //DartShooter----------------------------
+    DartShooter = function()
+    {
+    };
+
+    DartShooter.prototype.Shoot = function(x, y, angle)
+    {
+        //TODO:おためし中
+        game.add.image(x, y, 'dartImg');
+    };
 
 
     //----main-------------------------
     var game = new Phaser.Game(800, 480, Phaser.AUTO, '', { preload: preload, create: create, update: update });
     var arm;
+    var dartShooter;
 
     function preload() {
         game.load.image('foreArm', 'assets/armFig.png');
         game.load.image('upperArm', 'assets/armFig.png');
+        game.load.image('dartImg', 'assets/dartImg.png');
     }
 
     function create() {
         game.stage.backgroundColor = "000000";
         //TODO:armに改名
-        arm = new Arm();
+        dartShooter = new DartShooter();
+        arm = new Arm(function(){ dartShooter.Shoot();});
     }
 
     var isClickOn = false;
