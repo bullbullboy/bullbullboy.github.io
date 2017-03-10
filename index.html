@@ -16,19 +16,176 @@
 
 (function()
 {
+
+    function toRad(degree)
+    {
+        return degree * Math.PI / 180 ;
+    };
+
+    //Armクラス-----------------------
+    var ArmWidth = 100;
+    var ArmHeight = 0;
+
+    //TODO:JavaScriptのEnumどうやるんだ
+    var State = {Set:0, RaiseArm:1, BendElbow:2, Throw:3, Finished:4, Max:5};
+
+
+    Arm = function()
+    {
+        this.state = State.RaiseArm;
+
+        this.shoulderPos = new Phaser.Point(100, 200);
+        this.shoulderAngle = 0;
+        this.elbowAngle = 0;
+        this.upperArm = game.add.image(0, 0, 'upperArm');
+        this.foreArm = game.add.image(0, 0, 'foreArm');
+
+        //回転軸の指定
+        this.upperArm.anchor = new Phaser.Point(0, 0.5);
+        this.foreArm.anchor = new Phaser.Point(0, 0.5);
+
+        this.init();
+    };
+
+    //TODO:改名
+    Arm.prototype.ToNextAction = function()
+    {
+        //TODO Stateパターン
+        switch(this.state)
+        {
+
+            // case State.RaiseArm:
+            // break;
+
+            // case State.BendElbow:
+            // break;
+
+            // case State.Throw:
+            // break;
+
+            // case State.Finished:
+            // break;
+            case State.Throw:
+                //Do Nothing
+                break;
+
+            default:
+                    this.state++;
+                    this.state = this.state % State.Max;
+                    break;
+        }
+    };
+
+    //TODO:改名
+    Arm.prototype.ToNext = function()
+    {
+        this.refreshRelativeAngles();
+        this.refreshArmAngles();
+        this.refreshImage();
+    };
+
+    Arm.prototype.refreshRelativeAngles = function()
+    {
+        //TODO Stateパターン
+        switch(this.state)
+        {
+            case State.Set:
+                this.init();
+                break;
+            case State.RaiseArm:
+                this.shoulderAngle -= 1;
+                break;
+
+            case State.BendElbow:
+                this.elbowAngle -= 3;
+                break;
+
+            case State.Throw:
+                var nextShoulderAngle = this.shoulderAngle - 2;
+                var nextElbowAngle = this.elbowAngle + 10;
+                this.shoulderAngle = nextShoulderAngle;
+                this.elbowAngle = nextElbowAngle;
+
+                if(this.elbowAngle >= 0)
+                {
+                    this.state++;
+                    this.elbowAngle = 0;
+                }
+                break;
+
+            case State.Finished:
+                break;
+
+            default:
+                break;
+        }
+
+    };
+
+    Arm.prototype.refreshArmAngles = function()
+    {
+        this.upperArm.angle = this.shoulderAngle;
+        this.foreArm.angle = this.upperArm.angle + this.elbowAngle;
+    };
+
+    Arm.prototype.init = function()
+    {
+        this.shoulderAngle = 80;
+        this.elbowAngle = 0;
+        this.state = State.Set;
+    };
+
+    Arm.prototype.refreshImage = function()
+    {
+        this.upperArm.position = new Phaser.Point(
+            this.shoulderPos.x, this.shoulderPos.y);
+        this.foreArm.position = new Phaser.Point(
+            this.shoulderPos.x + ArmWidth * Math.cos(toRad(this.upperArm.angle)),
+            this.shoulderPos.y + ArmWidth * Math.sin(toRad(this.upperArm.angle)));
+    };
+
+    //-----------------------------
+
+
+    //----main-------------------------
     var game = new Phaser.Game(800, 480, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+    var arm;
 
     function preload() {
-
+        game.load.image('foreArm', 'assets/armFig.png');
+        game.load.image('upperArm', 'assets/armFig.png');
     }
 
     function create() {
-
+        game.stage.backgroundColor = "000000";
+        //TODO:armに改名
+        arm = new Arm();
     }
 
+    var isClickOn = false;
+    var isClickOnPrev = false;
     function update() {
+        arm.ToNext();
 
+        //TODO:クリックどうやるんだ
+        if (game.input.activePointer.isDown)
+        {
+            isClickOn = true;
+        }
+
+        if (game.input.activePointer.isUp)
+        {
+            isClickOn = false;
+        }
+
+        //OnEdgeをとる
+        if(isClickOn && !isClickOnPrev)
+        {
+            arm.ToNextAction();
+        }
+        isClickOnPrev = isClickOn;
     }
+
 })();
 
 </script>
