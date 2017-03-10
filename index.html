@@ -2,7 +2,7 @@
 <html lang="en"> 
 <head> 
 	<meta charset="UTF-8" />
-	<title>Phaser - Making your first game, part 1</title>
+	<title>2DDarts v0.000.001</title>
 	<script type="text/javascript" src="js/phaser.min.js"></script>
     <style type="text/css">
         body {
@@ -43,7 +43,7 @@
         this.init();
     };
 
-    Arm.prototype. = function()
+    Arm.prototype.ToNextState = function()
     {
         //TODO Stateパターン
         switch(this.state)
@@ -184,6 +184,7 @@
 
     function create() {
         game.stage.backgroundColor = "000000";
+        //TODO:armに改名
         dartShooter = new DartShooter();
         arm = new Arm(function(){ dartShooter.Shoot();});
     }
@@ -207,7 +208,7 @@
         //OnEdgeをとる
         if(isClickOn && !isClickOnPrev)
         {
-            arm.();
+            arm.ToNextState();
         }
         isClickOnPrev = isClickOn;
     }
