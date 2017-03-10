@@ -28,30 +28,22 @@
     var DART_WIDTH = 16;
     var DART_HEIGHT = 16;
 
-    //TODO:大文字にする
-    var State = {Set:0, RaiseArm:1, BendElbow:2, Throw:3, Finished:4, Max:5};
+    //フォーム調整用    
+    var TIME_RATE =1;   //全体の速度はここで調整
+    var SETTING_SHOULDER_ANG_VEL = -1 * TIME_RATE;
+    var BENDING_ELBOW_ANG_VEL = -3 * TIME_RATE;
+    var THROWING_SHOULDER_ANG_VEL = -2 * TIME_RATE;
+    var THROWING_ELBOW_ANG_VEL = 10 * TIME_RATE;
+
+    var State = {Set:0, RaisingArm:1, BendingElbow:2, Throwing:3, Finished:4, Max:5};
 
     Arm = function(shootDartFunc)
     {
-        //TODO:初期化をどこかで統一
-        this.state = State.RaiseArm;
-        this.throwDart = shootDartFunc;
-
-        this.shoulderPos = new Phaser.Point(100, 200);
-        this.shoulderAngle = 0;
-        this.elbowAngle = 0;
-        this.upperArm = game.add.image(0, 0, 'upperArm');
-        this.foreArm = game.add.image(0, 0, 'foreArm');
-
-        //回転軸の指定
-        this.upperArm.anchor = new Phaser.Point(0, 0.5);
-        this.foreArm.anchor = new Phaser.Point(0, 0.5);
-
+        this.initialize(shootDartFunc);
         this.init();
     };
 
-    //TODO:改名
-    Arm.prototype.ToNextAction = function()
+    Arm.prototype. = function()
     {
         //TODO Stateパターン
         switch(this.state)
@@ -60,7 +52,7 @@
             // case State.RaiseArm:
             // break;
 
-            case State.BendElbow:
+            case State.BendingElbow:
                 this.throwDart(100,100,10);//TODO:その時の値を入れる
                 //TODO:共通化
                 this.state++;
@@ -72,30 +64,22 @@
 
             // case State.Finished:
             // break;
-            case State.Throw:
+            case State.Throwing:
                 //Do Nothing
                 break;
 
             default:
-                this.state++;
-                this.state = this.state % State.Max;
+                this.nextState();
                 break;
         }
     };
 
-    //TODO:改名
-    Arm.prototype.ToNext = function()
+    Arm.prototype.Update = function()
     {
         this.refreshRelativeAngles();
         this.refreshArmAngles();
         this.refreshImage();
     };
-
-    var TIME_RATE =1;
-    var SETTING_SHOULDER_ANG_VEL = -1 * TIME_RATE;
-    var BENDING_ELBOW_ANG_VEL = -3 * TIME_RATE;
-    var THROWING_SHOULDER_ANG_VEL = -2 * TIME_RATE;
-    var THROWING_ELBOW_ANG_VEL = 10 * TIME_RATE;
 
     Arm.prototype.refreshRelativeAngles = function()
     {
@@ -105,15 +89,15 @@
             case State.Set:
                 this.init();
                 break;
-            case State.RaiseArm:
+            case State.RaisingArm:
                 this.shoulderAngle += SETTING_SHOULDER_ANG_VEL;
                 break;
 
-            case State.BendElbow:
+            case State.BendingElbow:
                 this.elbowAngle += BENDING_ELBOW_ANG_VEL;
                 break;
 
-            case State.Throw:
+            case State.Throwing:
                 this.shoulderAngle += THROWING_SHOULDER_ANG_VEL;
                 this.elbowAngle += THROWING_ELBOW_ANG_VEL;
 
@@ -139,11 +123,23 @@
         this.foreArm.angle = this.upperArm.angle + this.elbowAngle;
     };
 
+    Arm.prototype.initialize = function(shootFunc)
+    {
+        this.throwDart = shootFunc;
+        this.upperArm = game.add.image(0, 0, 'upperArm');
+        this.foreArm = game.add.image(0, 0, 'foreArm');
+
+        //回転軸の指定
+        this.upperArm.anchor = new Phaser.Point(0, 0.5);
+        this.foreArm.anchor = new Phaser.Point(0, 0.5);
+    };
+
     Arm.prototype.init = function()
     {
         this.shoulderAngle = 80;
         this.elbowAngle = 0;
         this.state = State.Set;
+        this.shoulderPos = new Phaser.Point(100, 200);
     };
 
     Arm.prototype.refreshImage = function()
@@ -153,6 +149,12 @@
         this.foreArm.position = new Phaser.Point(
             this.shoulderPos.x + ARM_WIDTH * Math.cos(toRad(this.upperArm.angle)),
             this.shoulderPos.y + ARM_WIDTH * Math.sin(toRad(this.upperArm.angle)));
+    };
+
+    Arm.prototype.nextState = function()
+    {
+        this.state++;
+        this.state = this.state % State.Max;
     };
 
     //-Armここまで----------------------------
@@ -182,7 +184,6 @@
 
     function create() {
         game.stage.backgroundColor = "000000";
-        //TODO:armに改名
         dartShooter = new DartShooter();
         arm = new Arm(function(){ dartShooter.Shoot();});
     }
@@ -190,7 +191,7 @@
     var isClickOn = false;
     var isClickOnPrev = false;
     function update() {
-        arm.ToNext();
+        arm.Update();
 
         //TODO:クリックどうやるんだ
         if (game.input.activePointer.isDown)
@@ -206,7 +207,7 @@
         //OnEdgeをとる
         if(isClickOn && !isClickOnPrev)
         {
-            arm.ToNextAction();
+            arm.();
         }
         isClickOnPrev = isClickOn;
     }
