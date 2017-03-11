@@ -192,12 +192,20 @@
         this.vx = VELOCITY_FIRST * Math.cos(angle0);
         this.vy = VELOCITY_FIRST * Math.sin(angle0);
 
-        //positionで管理すると整数になるため、別に管理する
+        //x, yはダーツの中心を指す。画像の描画位置とは別。
+        //positionで管理すると整数に丸められる可能性もあるため、別に管理する
         this.x = x0;
         this.y = y0;
 
         this.angle = angle0;
-        this.image = game.add.image(this.x, this.y, 'dartImg')
+        this.image = game.add.image(0, 0, 'dartImg')
+        this.refreshImagePosition();
+    };
+
+    Dart.prototype.refreshImagePosition = function()
+    {
+        this.image.position.x = this.x - this.image.width / 2;
+        this.image.position.y = this.y - this.image.height / 2;
     };
 
     Dart.prototype.hitsBoard = function()
@@ -221,11 +229,7 @@
         {
             this.isFreezed = true;
         }
-
-        this.image.position.x = this.x;   
-        this.image.position.y = this.y;
-
-
+        this.refreshImagePosition();
     };
 
     //DartShooter----------------------------
