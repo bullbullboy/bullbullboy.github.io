@@ -235,6 +235,11 @@
     DartsBoard = function()
     {
         this.boardBaseImg = game.add.image(BOARD_X, BOARD_TOP, 'boardBase');
+
+        this.bullImg = game.add.image(0, 0, 'bull');
+
+        this.bullImg.position.x = this.boardBaseImg.position.x;
+        this.bullImg.position.y = this.boardBaseImg.y + this.boardBaseImg.height / 2 - this.bullImg.height / 2;
     };
 
     //----main-------------------------
@@ -248,6 +253,7 @@
         game.load.image('upperArm', 'assets/armFig.png');
         game.load.image('dartImg', 'assets/dartImg.png');
         game.load.image('boardBase', 'assets/board.png');
+        game.load.image('bull', 'assets/bull.png');
     }
 
     function create() {
