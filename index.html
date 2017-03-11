@@ -187,6 +187,7 @@
     //Dart
     Dart = function(x0, y0, angle0)
     {
+        this.isOnBoard = false;
         //TODO:初速は外からもらうべき？仮実装
         this.vx = VELOCITY_FIRST * Math.cos(angle0);
         this.vy = VELOCITY_FIRST * Math.sin(angle0);
@@ -199,14 +200,31 @@
         this.image = game.add.image(this.x, this.y, 'dartImg')
     };
 
+    Dart.prototype.hitsBoard = function()
+    {
+        //TODO:仮実装
+        return (this.x > BOARD_X);
+    };
+
     Dart.prototype.Update = function()
     {
+        if(this.isOnBoard)
+        {
+            return;
+        }
+
         this.vy += GRAVITY;
         this.x += this.vx;
         this.y += this.vy;
 
+        if(this.hitsBoard())
+        {
+            this.isOnBoard = true;
+        }
+
         this.image.position.x = this.x;   
         this.image.position.y = this.y;
+
 
     };
 
@@ -237,7 +255,6 @@
         this.boardBaseImg = game.add.image(BOARD_X, BOARD_TOP, 'boardBase');
 
         this.bullImg = game.add.image(0, 0, 'bull');
-
         this.bullImg.position.x = this.boardBaseImg.position.x;
         this.bullImg.position.y = this.boardBaseImg.y + this.boardBaseImg.height / 2 - this.bullImg.height / 2;
     };
