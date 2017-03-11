@@ -21,8 +21,7 @@
     {
         return degree * Math.PI / 180 ;
     };
-
-    //Armクラス-----------------------
+    //各種調整用
     var ARM_WIDTH = 100;
     var ARM_HEIGHT = 0;
     var DART_WIDTH = 16;
@@ -34,6 +33,11 @@
     var BENDING_ELBOW_ANG_VEL = -3 * TIME_RATE;
     var THROWING_SHOULDER_ANG_VEL = -2 * TIME_RATE;
     var THROWING_ELBOW_ANG_VEL = 10 * TIME_RATE;
+
+    var VELOCITY_FIRST = 12;
+    var GRAVITY = 0.15;
+
+    //Armクラス-----------------------
 
     var State = {Set:0, RaisingArm:1, BendingElbow:2, Throwing:3, Finished:4, Max:5};
 
@@ -171,12 +175,11 @@
     };
 
     //-Armここまで----------------------------
-
     //Dart
     Dart = function(x0, y0, angle0)
     {
         //TODO:初速は外からもらうべき？仮実装
-        var VELOCITY_FIRST = 10;
+        
 
         this.vx = VELOCITY_FIRST * Math.cos(angle0);
         this.vy = VELOCITY_FIRST * Math.sin(angle0);
@@ -188,6 +191,8 @@
     {
         this.image.position.x += this.vx;   
         this.image.position.y += this.vy;
+
+        this.vy += GRAVITY;
     };
 
     //DartShooter----------------------------
