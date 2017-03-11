@@ -219,9 +219,10 @@
 
     Dart.prototype.checkOutOfScreen = function()
     {
-        if (this.x < -100) return true;
-        if (this.x > SCREEN_WIDTH + 100) return true;
-        if (this.y < -100) return true;
+        var MARGIN = 50;
+        if (this.x < -MARGIN) return true;
+        if (this.x > SCREEN_WIDTH + MARGIN) return true;
+        if (this.y < -MARGIN) return true;
         return false;
     }
     Dart.prototype.Update = function()
@@ -256,6 +257,7 @@
         if(this.checkOutOfScreen())
         {
             this.IsOutOfScreen = true;
+            scorer.Miss();
         }
     };
 
