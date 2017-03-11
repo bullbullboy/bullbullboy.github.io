@@ -43,6 +43,18 @@
         this.init();
     };
 
+    Arm.prototype.handPos = function()
+    {
+        var xPos = this.shoulderPos.x + ARM_WIDTH * Math.cos(toRad(this.upperArm.angle)) + ARM_WIDTH * Math.cos(toRad(this.foreArm.angle));
+        var yPos = this.shoulderPos.y + ARM_WIDTH * Math.sin(toRad(this.upperArm.angle)) + ARM_WIDTH * Math.sin(toRad(this.foreArm.angle));
+        return {x: xPos, y: yPos};
+    };
+
+    Arm.prototype.dartsAngle = function()
+    {
+        return toRad((this.foreArm.angle + 90));
+    };
+
     Arm.prototype.ToNextState = function()
     {
         //TODO Stateパターン
@@ -53,7 +65,8 @@
             // break;
 
             case State.BendingElbow:
-                this.throwDart(100,100,10);//TODO:その時の値を入れる
+                var hand = this.handPos();
+                this.throwDart(hand.x, hand.y, this.dartsAngle());//TODO:角度
                 //TODO:共通化
                 this.state++;
                 this.state = this.state % State.Max;
@@ -168,6 +181,7 @@
     {
         //TODO:おためし中
         game.add.image(x, y, 'dartImg');
+        console.log(angle);
     };
 
 
@@ -184,9 +198,8 @@
 
     function create() {
         game.stage.backgroundColor = "000000";
-        //TODO:armに改名
         dartShooter = new DartShooter();
-        arm = new Arm(function(){ dartShooter.Shoot();});
+        arm = new Arm(dartShooter.Shoot.bind(dartShooter));
     }
 
     var isClickOn = false;
