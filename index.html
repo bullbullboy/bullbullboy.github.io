@@ -339,12 +339,17 @@
     //---scorer--------
     Scorer = function()
     {
+        this.scoreBest = 0;
         this.scoreOfContinuousBull = 0;
     };
 
     Scorer.prototype.HitsBull = function()
     {
         this.scoreOfContinuousBull++;
+        if(this.scoreOfContinuousBull > this.scoreBest)
+        {
+            this.scoreBest = this.scoreOfContinuousBull;
+        }
         this.refresh();
     };
 
@@ -356,7 +361,8 @@
 
     Scorer.prototype.refresh = function()
     {
-        scoreText.text = this.scoreOfContinuousBull;
+        scoreBestText.text = this.scoreBest;
+        scoreCurrentText.text = this.scoreOfContinuousBull;
     };
 
     //----main-------------------------
@@ -364,7 +370,10 @@
     var arm;
     var dartShooter;
     var dartsBoard;
-    var scoreText;
+    var scoreCurrentText;
+    var scoreBestText;
+    var scoreBestLabel;
+    var scoreCurrentLabel;
     var scorer = new Scorer();
 
     function preload() {
@@ -384,7 +393,13 @@
         var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "right", boundsAlignV: "middle" };
 
         //  The Text is positioned at 0, 100
-        scoreText = game.add.text(0, 0, "0", style);
+        scoreBestLabel = game.add.text(0, 0, "BEST", style);
+        scoreCurrentLabel = game.add.text(0, scoreBestLabel.height, "SCORE", style);
+
+        var labelXPos = ((scoreBestLabel.width > scoreCurrentLabel.width)? scoreBestLabel.width : scoreCurrentLabel.width )+ 10;
+
+        scoreBestText = game.add.text(labelXPos, 0, "0", style);
+        scoreCurrentText = game.add.text(labelXPos, scoreBestLabel.height, "0", style);
     }
 
     var isClickOn = false;
