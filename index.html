@@ -205,15 +205,8 @@
 
     Dart.prototype.refreshImagePosition = function()
     {
-        //TODO image width/heightに使うたびいちいちアクセスする？ / 2ロジックが２箇所に散っている
         this.image.position.x = this.x - this.image.width / 2;
         this.image.position.y = this.y - this.image.height / 2;
-    };
-
-    Dart.prototype.hitsBoard = function()
-    {
-         //TODO image width/heightに使うたびいちいちアクセスする？ / 2ロジックが２箇所に散っている
-        return dartsBoard.hits(this.x + this.image.width / 2, this.y);
     };
 
     Dart.prototype.Update = function()
@@ -229,7 +222,7 @@
 
         var pointEdge = {x: this.x + this.image.width / 2, y: this.y};
 
-        if(this.hitsBoard())
+        if(dartsBoard.hits(pointEdge.x, pointEdge.y))
         {
             this.x = BOARD_X - this.image.width / 2;
             this.isFreezed = true;
