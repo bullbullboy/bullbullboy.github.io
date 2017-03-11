@@ -380,7 +380,9 @@
         this.scoreBestLabel = game.add.text(0, 0, "BEST", style);
         this.scoreCurrentLabel = game.add.text(0, this.scoreBestLabel.height, "SCORE", style);
 
-        var labelXPos = ((this.scoreBestLabel.width > this.scoreCurrentLabel.width)? this.scoreBestLabel.width : this.scoreCurrentLabel.width )+ 10;
+        var MARGIN_LABEL_TO_SCORELABEL = 60;
+        var labelXPos = ((this.scoreBestLabel.width > this.scoreCurrentLabel.width)? 
+            this.scoreBestLabel.width : this.scoreCurrentLabel.width )+ MARGIN_LABEL_TO_SCORELABEL;
         this.scoreBestText = game.add.text(labelXPos, 0, "0", style);
         this.scoreCurrentText = game.add.text(labelXPos, this.scoreBestLabel.height, "0", style);
     };
