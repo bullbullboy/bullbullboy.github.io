@@ -44,6 +44,9 @@
     var THROWING_SHOULDER_ANG_VEL = -2 * TIME_RATE;
     var THROWING_ELBOW_ANG_VEL = 10 * TIME_RATE;
 
+    var ELBOW_ANGLE_MAX = 175;
+
+
     var VELOCITY_FIRST = 11;
     var GRAVITY = 0.15;
 
@@ -80,7 +83,13 @@
 
             case State.BendingElbow:
                 var hand = this.handPos();
-                this.throwDart(hand.x, hand.y, this.dartsAngle());//TODO:角度
+                var v0 = VELOCITY_FIRST;
+                if(this.elbowAngle <= - ELBOW_ANGLE_MAX)
+                {
+                    v0 /= 2;
+                }
+
+                this.throwDart(hand.x, hand.y, this.dartsAngle(), v0);//TODO:角度
                 this.nextState();
             // case State.Throw:
             // break;
@@ -122,6 +131,10 @@
 
             case State.BendingElbow:
                 this.elbowAngle += BENDING_ELBOW_ANG_VEL;
+                if(this.elbowAngle  < -ELBOW_ANGLE_MAX)
+                {
+                    this.elbowAngle = - ELBOW_ANGLE_MAX;
+                }
                 break;
 
             case State.Throwing:
@@ -207,14 +220,14 @@
 
     //-Armここまで----------------------------
     //Dart
-    Dart = function(x0, y0, angle0)
+    Dart = function(x0, y0, angle0, v0)
     {
         this.isFreezed = false;
         this.IsOutOfScreen = false;
 
         //TODO:初速は外からもらうべき？仮実装
-        this.vx = VELOCITY_FIRST * Math.cos(angle0);
-        this.vy = VELOCITY_FIRST * Math.sin(angle0);
+        this.vx = v0 * Math.cos(angle0);
+        this.vy = v0 * Math.sin(angle0);
 
         //x, yはダーツの中心を指す。画像の描画位置とは別。
         //positionで管理すると整数に丸められる可能性もあるため、別に管理する
@@ -289,10 +302,10 @@
         this.dartsList = new Array();
     };
 
-    DartShooter.prototype.Shoot = function(x, y, angle)
+    DartShooter.prototype.Shoot = function(x, y, angle, v0)
     {
         //TODO:おためし中
-        this.dartsList.push(new Dart(x, y, angle));        
+        this.dartsList.push(new Dart(x, y, angle, v0));        
     };
 
     DartShooter.prototype.RemoveGarbageDarts = function()
