@@ -22,10 +22,8 @@
         return degree * Math.PI / 180 ;
     };
     //各種調整用
-    var ARM_WIDTH = 100;
-    var ARM_HEIGHT = 0;
-    var DART_WIDTH = 16;
-    var DART_HEIGHT = 16;
+    var ARM_LENGTH;//画像からロード
+    var ARM_HEIGHT;//画像からロード
 
     var BOARD_X = 700;
     var BOARD_TOP = 50;
@@ -58,8 +56,8 @@
 
     Arm.prototype.handPos = function()
     {
-        var xPos = this.shoulderPos.x + ARM_WIDTH * Math.cos(toRad(this.upperArm.angle)) + ARM_WIDTH * Math.cos(toRad(this.foreArm.angle));
-        var yPos = this.shoulderPos.y + ARM_WIDTH * Math.sin(toRad(this.upperArm.angle)) + ARM_WIDTH * Math.sin(toRad(this.foreArm.angle));
+        var xPos = this.shoulderPos.x + ARM_LENGTH * Math.cos(toRad(this.upperArm.angle)) + ARM_LENGTH * Math.cos(toRad(this.foreArm.angle));
+        var yPos = this.shoulderPos.y + ARM_LENGTH * Math.sin(toRad(this.upperArm.angle)) + ARM_LENGTH * Math.sin(toRad(this.foreArm.angle));
         return {x: xPos, y: yPos};
     };
 
@@ -154,6 +152,8 @@
         this.throwDart = shootFunc;
         this.upperArm = game.add.image(0, 0, 'upperArm');
         this.foreArm = game.add.image(0, 0, 'foreArm');
+        ARM_LENGTH = this.upperArm.width;
+        ARM_HEIGHT = this.upperArm.height;
 
         //回転軸の指定
         this.upperArm.anchor = new Phaser.Point(0, 0.5);
@@ -173,8 +173,8 @@
         this.upperArm.position = new Phaser.Point(
             this.shoulderPos.x, this.shoulderPos.y);
         this.foreArm.position = new Phaser.Point(
-            this.shoulderPos.x + ARM_WIDTH * Math.cos(toRad(this.upperArm.angle)),
-            this.shoulderPos.y + ARM_WIDTH * Math.sin(toRad(this.upperArm.angle)));
+            this.shoulderPos.x + ARM_LENGTH * Math.cos(toRad(this.upperArm.angle)),
+            this.shoulderPos.y + ARM_LENGTH * Math.sin(toRad(this.upperArm.angle)));
     };
 
     Arm.prototype.nextState = function()
