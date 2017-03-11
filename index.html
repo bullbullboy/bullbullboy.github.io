@@ -243,7 +243,12 @@
             this.isFreezed = true;
             if(dartsBoard.hitsBull(pointEdge.y))
             {
-                game.camera.flash(0xff0000, 200);                
+                game.camera.flash(0xff0000, 200);
+                scorer.HitsBull();                
+            }
+            else
+            {
+                scorer.Miss();
             }
         }
         this.refreshImagePosition();
@@ -331,11 +336,36 @@
 
     }
 
+    //---scorer--------
+    Scorer = function()
+    {
+        this.scoreOfContinuousBull = 0;
+    };
+
+    Scorer.prototype.HitsBull = function()
+    {
+        this.scoreOfContinuousBull++;
+        this.refresh();
+    };
+
+    Scorer.prototype.Miss = function()
+    {
+        this.scoreOfContinuousBull = 0;
+        this.refresh();
+    };
+
+    Scorer.prototype.refresh = function()
+    {
+        scoreText.text = this.scoreOfContinuousBull;
+    };
+
     //----main-------------------------
     var game = new Phaser.Game(SCREEN_WIDTH, SCREEN_HEIGHT, Phaser.AUTO, '', { preload: preload, create: create, update: update });
     var arm;
     var dartShooter;
     var dartsBoard;
+    var scoreText;
+    var scorer = new Scorer();
 
     function preload() {
         game.load.image('foreArm', 'assets/armFig.png');
@@ -350,6 +380,11 @@
         dartShooter = new DartShooter();
         arm = new Arm(dartShooter.Shoot.bind(dartShooter));
         dartsBoard = new DartsBoard();
+
+        var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "right", boundsAlignV: "middle" };
+
+        //  The Text is positioned at 0, 100
+        scoreText = game.add.text(0, 0, "0", style);
     }
 
     var isClickOn = false;
