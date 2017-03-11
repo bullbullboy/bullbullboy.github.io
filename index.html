@@ -34,7 +34,7 @@
     var THROWING_SHOULDER_ANG_VEL = -2 * TIME_RATE;
     var THROWING_ELBOW_ANG_VEL = 10 * TIME_RATE;
 
-    var VELOCITY_FIRST = 12;
+    var VELOCITY_FIRST = 11;
     var GRAVITY = 0.15;
 
     //Armクラス-----------------------
@@ -179,20 +179,26 @@
     Dart = function(x0, y0, angle0)
     {
         //TODO:初速は外からもらうべき？仮実装
-        
-
         this.vx = VELOCITY_FIRST * Math.cos(angle0);
         this.vy = VELOCITY_FIRST * Math.sin(angle0);
+
+        //positionで管理すると整数になるため、別に管理する
+        this.x = x0;
+        this.y = y0;
+
         this.angle = angle0;
-        this.image = game.add.image(x0, y0, 'dartImg')
+        this.image = game.add.image(this.x, this.y, 'dartImg')
     };
 
     Dart.prototype.Update = function()
     {
-        this.image.position.x += this.vx;   
-        this.image.position.y += this.vy;
-
         this.vy += GRAVITY;
+        this.x += this.vx;
+        this.y += this.vy;
+
+        this.image.position.x = this.x;   
+        this.image.position.y = this.y;
+
     };
 
     //DartShooter----------------------------
