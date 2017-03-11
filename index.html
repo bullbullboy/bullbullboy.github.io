@@ -375,6 +375,14 @@
     {
         this.scoreBest = 0;
         this.scoreOfContinuousBull = 0;
+
+        var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "right", boundsAlignV: "middle" };
+        this.scoreBestLabel = game.add.text(0, 0, "BEST", style);
+        this.scoreCurrentLabel = game.add.text(0, this.scoreBestLabel.height, "SCORE", style);
+
+        var labelXPos = ((this.scoreBestLabel.width > this.scoreCurrentLabel.width)? this.scoreBestLabel.width : this.scoreCurrentLabel.width )+ 10;
+        this.scoreBestText = game.add.text(labelXPos, 0, "0", style);
+        this.scoreCurrentText = game.add.text(labelXPos, this.scoreBestLabel.height, "0", style);
     };
 
     Scorer.prototype.HitsBull = function()
@@ -395,8 +403,8 @@
 
     Scorer.prototype.refresh = function()
     {
-        scoreBestText.text = this.scoreBest;
-        scoreCurrentText.text = this.scoreOfContinuousBull;
+        this.scoreBestText.text = this.scoreBest;
+        this.scoreCurrentText.text = this.scoreOfContinuousBull;
     };
 
     //----main-------------------------
@@ -404,11 +412,7 @@
     var arm;
     var dartShooter;
     var dartsBoard;
-    var scoreCurrentText;
-    var scoreBestText;
-    var scoreBestLabel;
-    var scoreCurrentLabel;
-    var scorer = new Scorer();
+    var scorer;
 
     function preload() {
         game.load.image('foreArm', 'assets/armFig.png');
@@ -426,17 +430,7 @@
         dartShooter = new DartShooter();
         arm = new Arm(dartShooter.Shoot.bind(dartShooter));
         dartsBoard = new DartsBoard();
-
-        var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "right", boundsAlignV: "middle" };
-
-        //  The Text is positioned at 0, 100
-        scoreBestLabel = game.add.text(0, 0, "BEST", style);
-        scoreCurrentLabel = game.add.text(0, scoreBestLabel.height, "SCORE", style);
-
-        var labelXPos = ((scoreBestLabel.width > scoreCurrentLabel.width)? scoreBestLabel.width : scoreCurrentLabel.width )+ 10;
-
-        scoreBestText = game.add.text(labelXPos, 0, "0", style);
-        scoreCurrentText = game.add.text(labelXPos, scoreBestLabel.height, "0", style);
+        scorer = new Scorer();
     }
 
     var isClickOn = false;
@@ -465,7 +459,6 @@
         return isOnEdge;
     }
 
-    var GameState = {Menu:0, Play:1, Finished:2};
     function dispatchEvent()
     {
         if(isClickOnEdge())
