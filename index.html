@@ -80,11 +80,7 @@
             case State.BendingElbow:
                 var hand = this.handPos();
                 this.throwDart(hand.x, hand.y, this.dartsAngle());//TODO:角度
-                //TODO:共通化
-                this.state++;
-                this.state = this.state % State.Max;
-                break;
-
+                this.nextState();
             // case State.Throw:
             // break;
 
@@ -92,6 +88,10 @@
             // break;
             case State.Throwing:
                 //Do Nothing
+                break;
+            case State.Finished:
+                this.nextState();
+                dartShooter.RemoveGarbageDarts();
                 break;
 
             default:
@@ -190,7 +190,7 @@
     Dart = function(x0, y0, angle0)
     {
         this.isFreezed = false;
-        this.isOutOfScreen = false;
+        this.IsOutOfScreen = false;
 
         //TODO:初速は外からもらうべき？仮実装
         this.vx = VELOCITY_FIRST * Math.cos(angle0);
@@ -221,7 +221,7 @@
     }
     Dart.prototype.Update = function()
     {
-        if(this.isFreezed || this.isOutOfScreen)
+        if(this.isFreezed || this.IsOutOfScreen)
         {
             return;
         }
@@ -245,7 +245,7 @@
 
         if(this.checkOutOfScreen())
         {
-            this.isOutOfScreen = true;
+            this.IsOutOfScreen = true;
         }
     };
 
@@ -261,6 +261,18 @@
         //TODO:おためし中
         this.dartsList.push(new Dart(x, y, angle));        
     };
+
+    DartShooter.prototype.RemoveGarbageDarts = function()
+    {
+        var lastDartIdx = this.dartsList.length - 1;
+        for(var i = lastDartIdx; i >= 0; i--)
+        {
+            if(this.dartsList[i].IsOutOfScreen)
+            {
+                this.dartsList.splice(i, 1);//削除
+            }
+        }        
+    }
 
     DartShooter.prototype.UpdateAllDart = function()
     {
