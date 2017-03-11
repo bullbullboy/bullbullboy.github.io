@@ -188,6 +188,7 @@
     Dart = function(x0, y0, angle0)
     {
         this.isFreezed = false;
+
         //TODO:初速は外からもらうべき？仮実装
         this.vx = VELOCITY_FIRST * Math.cos(angle0);
         this.vy = VELOCITY_FIRST * Math.sin(angle0);
@@ -198,20 +199,21 @@
         this.y = y0;
 
         this.angle = angle0;
-        this.image = game.add.image(0, 0, 'dartImg')
+        this.image = game.add.image(0, 0, 'dartImg');
         this.refreshImagePosition();
     };
 
     Dart.prototype.refreshImagePosition = function()
     {
+        //TODO image width/heightに使うたびいちいちアクセスする？ / 2ロジックが２箇所に散っている
         this.image.position.x = this.x - this.image.width / 2;
         this.image.position.y = this.y - this.image.height / 2;
     };
 
     Dart.prototype.hitsBoard = function()
     {
-        //TODO:仮実装
-        return (this.x > BOARD_X);
+         //TODO image width/heightに使うたびいちいちアクセスする？ / 2ロジックが２箇所に散っている
+        return dartsBoard.hits(this.x + this.image.width / 2, this.y);
     };
 
     Dart.prototype.Update = function()
@@ -254,6 +256,9 @@
     };
 
     //----DartsBoard------------------------
+    var BOARD_BOTTOM;
+    var BOARD_RIGHT;
+
     DartsBoard = function()
     {
         this.boardBaseImg = game.add.image(BOARD_X, BOARD_TOP, 'boardBase');
@@ -261,7 +266,20 @@
         this.bullImg = game.add.image(0, 0, 'bull');
         this.bullImg.position.x = this.boardBaseImg.position.x;
         this.bullImg.position.y = this.boardBaseImg.y + this.boardBaseImg.height / 2 - this.bullImg.height / 2;
+        BOARD_BOTTOM = BOARD_TOP + this.boardBaseImg.height;
+        BOARD_RIGHT = BOARD_X + this.boardBaseImg.width;
     };
+
+    DartsBoard.prototype.hits = function(dartEdgeX, dartEdgeY)
+    {
+        //ダーツのポイントがBoardの中に入っていたらTrue
+        if(dartEdgeX < BOARD_X) return false;
+        if(dartEdgeY < BOARD_TOP) return false;
+        if(dartEdgeY > BOARD_BOTTOM) return false;
+        if(dartEdgeX > BOARD_RIGHT) return false;
+
+        return true;
+    }
 
     //----main-------------------------
     var game = new Phaser.Game(800, 480, Phaser.AUTO, '', { preload: preload, create: create, update: update });
