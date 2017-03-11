@@ -206,6 +206,11 @@
         this.refreshImagePosition();
     };
 
+    Dart.prototype.Destory = function()
+    {
+        this.image.kill();
+    };
+
     Dart.prototype.refreshImagePosition = function()
     {
         this.image.position.x = this.x - this.image.width / 2;
@@ -250,6 +255,7 @@
     };
 
     //DartShooter----------------------------
+    var DARTS_NUM_MAX_IN_SCREEN = 20;
     //TODO:名前。Factory的に作ったが・・・管理もしてるし・・・
     DartShooter = function()
     {
@@ -269,9 +275,17 @@
         {
             if(this.dartsList[i].IsOutOfScreen)
             {
+                this.dartsList[i].Destory();
                 this.dartsList.splice(i, 1);//削除
             }
-        }        
+        }
+
+        if(this.dartsList.length > DARTS_NUM_MAX_IN_SCREEN)
+        {
+            //一個スローするたびに呼ばれるので、１個削除すれば十分
+            this.dartsList[0].Destory();
+            this.dartsList.shift();//先頭を削除
+        }
     }
 
     DartShooter.prototype.UpdateAllDart = function()
