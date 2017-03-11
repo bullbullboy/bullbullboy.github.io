@@ -27,6 +27,15 @@
     var DART_WIDTH = 16;
     var DART_HEIGHT = 16;
 
+    var BOARD_X = 700;
+    var BOARD_TOP = 50;
+
+    var SHOULDER_ANGLE_FIRST = 80;
+    var ELBOW_ANGLE_FIRST = 0;
+
+    var SHOULDER_POS_X = 100;
+    var SHOULDER_POS_Y = 220;
+
     //フォーム調整用    
     var TIME_RATE =1;   //全体の速度はここで調整
     var SETTING_SHOULDER_ANG_VEL = -1 * TIME_RATE;
@@ -153,10 +162,10 @@
 
     Arm.prototype.init = function()
     {
-        this.shoulderAngle = 80;
-        this.elbowAngle = 0;
+        this.shoulderAngle = SHOULDER_ANGLE_FIRST;
+        this.elbowAngle = ELBOW_ANGLE_FIRST;
         this.state = State.Set;
-        this.shoulderPos = new Phaser.Point(100, 200);
+        this.shoulderPos = new Phaser.Point(SHOULDER_POS_X, SHOULDER_POS_Y);
     };
 
     Arm.prototype.refreshImage = function()
@@ -222,21 +231,30 @@
         }
     };
 
+    //----DartsBoard------------------------
+    DartsBoard = function()
+    {
+        this.boardBaseImg = game.add.image(BOARD_X, BOARD_TOP, 'boardBase');
+    };
+
     //----main-------------------------
     var game = new Phaser.Game(800, 480, Phaser.AUTO, '', { preload: preload, create: create, update: update });
     var arm;
     var dartShooter;
+    var dartsBoard;
 
     function preload() {
         game.load.image('foreArm', 'assets/armFig.png');
         game.load.image('upperArm', 'assets/armFig.png');
         game.load.image('dartImg', 'assets/dartImg.png');
+        game.load.image('boardBase', 'assets/board.png');
     }
 
     function create() {
         game.stage.backgroundColor = "000000";
         dartShooter = new DartShooter();
         arm = new Arm(dartShooter.Shoot.bind(dartShooter));
+        dartsBoard = new DartsBoard();
     }
 
     var isClickOn = false;
