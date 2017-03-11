@@ -187,7 +187,7 @@
     //Dart
     Dart = function(x0, y0, angle0)
     {
-        this.isOnBoard = false;
+        this.isFreezed = false;
         //TODO:初速は外からもらうべき？仮実装
         this.vx = VELOCITY_FIRST * Math.cos(angle0);
         this.vy = VELOCITY_FIRST * Math.sin(angle0);
@@ -208,7 +208,7 @@
 
     Dart.prototype.Update = function()
     {
-        if(this.isOnBoard)
+        if(this.isFreezed)
         {
             return;
         }
@@ -219,7 +219,7 @@
 
         if(this.hitsBoard())
         {
-            this.isOnBoard = true;
+            this.isFreezed = true;
         }
 
         this.image.position.x = this.x;   
