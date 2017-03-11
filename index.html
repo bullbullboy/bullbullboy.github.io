@@ -172,18 +172,44 @@
 
     //-Armここまで----------------------------
 
+    //Dart
+    Dart = function(x0, y0, angle0)
+    {
+        //TODO:初速は外からもらうべき？仮実装
+        var VELOCITY_FIRST = 10;
+
+        this.vx = VELOCITY_FIRST * Math.cos(angle0);
+        this.vy = VELOCITY_FIRST * Math.sin(angle0);
+        this.angle = angle0;
+        this.image = game.add.image(x0, y0, 'dartImg')
+    };
+
+    Dart.prototype.Update = function()
+    {
+        this.image.position.x += this.vx;   
+        this.image.position.y += this.vy;
+    };
+
     //DartShooter----------------------------
+    //TODO:名前。Factory的に作ったが・・・管理もしてるし・・・
     DartShooter = function()
     {
+        this.dartsList = new Array();
     };
 
     DartShooter.prototype.Shoot = function(x, y, angle)
     {
         //TODO:おためし中
-        game.add.image(x, y, 'dartImg');
-        console.log(angle);
+        this.dartsList.push(new Dart(x, y, angle));        
     };
 
+    DartShooter.prototype.UpdateAllDart = function()
+    {
+        for(var i = 0; i < this.dartsList.length; i++)
+        {
+            this.dartsList[i].Update();
+        }
+    };
 
     //----main-------------------------
     var game = new Phaser.Game(800, 480, Phaser.AUTO, '', { preload: preload, create: create, update: update });
@@ -206,6 +232,7 @@
     var isClickOnPrev = false;
     function update() {
         arm.Update();
+        dartShooter.UpdateAllDart();
 
         //TODO:クリックどうやるんだ
         if (game.input.activePointer.isDown)
