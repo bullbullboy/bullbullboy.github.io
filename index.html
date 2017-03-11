@@ -21,7 +21,7 @@
     {
         return degree * Math.PI / 180 ;
     };
-    
+
     var GAME_FPS = 60;
 
     var SCREEN_WIDTH = 800;
@@ -441,10 +441,9 @@
 
     var isClickOn = false;
     var isClickOnPrev = false;
-    function update() {
-        arm.Update();
-        dartShooter.UpdateAllDart();
-
+    function isClickOnEdge()
+    {
+        var isOnEdge = false;
         //TODO:クリックどうやるんだ
         if (game.input.activePointer.isDown)
         {
@@ -459,9 +458,27 @@
         //OnEdgeをとる
         if(isClickOn && !isClickOnPrev)
         {
+            isOnEdge = true;
+        }
+
+        isClickOnPrev = isClickOn;
+        return isOnEdge;
+    }
+
+    var GameState = {Menu:0, Play:1, Finished:2};
+    function dispatchEvent()
+    {
+        if(isClickOnEdge())
+        {
             arm.ToNextState();
         }
-        isClickOnPrev = isClickOn;
+
+    }
+
+    function update() {
+        arm.Update();
+        dartShooter.UpdateAllDart();
+        dispatchEvent();
     }
 
 })();
