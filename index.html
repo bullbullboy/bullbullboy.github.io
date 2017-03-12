@@ -102,8 +102,6 @@
                 break;
             case State.Finished:
                 this.nextState();
-                resultMenu.hide();
-                scorer.ShowScore();
                 dartShooter.RemoveGarbageDarts();
                 break;
 
@@ -341,6 +339,15 @@
         }
     };
 
+    DartShooter.prototype.RemoveAllDart = function()
+    {
+         for(var i = this.dartsList.length - 1; i >= 0; i--)
+        {
+            this.dartsList[i].Destory();
+            this.dartsList.splice(i, 1);//削除
+        }
+    };
+
     //----DartsBoard------------------------
     var BOARD_BOTTOM;
     var BOARD_RIGHT;
@@ -418,7 +425,8 @@
     Scorer.prototype.Miss = function()
     {
         this.HideScore();
-        resultMenu.show(this.scoreOfContinuousBull);
+        resultMenu.Show(this.scoreOfContinuousBull);
+        gameState = GameState.ShowingResult;
         this.scoreOfContinuousBull = 0;
         this.refresh();
     };
@@ -526,17 +534,17 @@
         {
             this.resultMenuComponentList[i].anchor = new Phaser.Point(0.5, 0.5);
         }
-        this.hide();
+        this.Hide();
     };
 
 
-    ResultMenu.prototype.show = function(scoreResult)
+    ResultMenu.prototype.Show = function(scoreResult)
     {
         this.scoreText.text = 'x ' + scoreResult;
         showAll(this.resultMenuComponentList);
     };
 
-    ResultMenu.prototype.hide = function()
+    ResultMenu.prototype.Hide = function()
     {
         hideAll(this.resultMenuComponentList);
     };
@@ -647,7 +655,7 @@
     //     titleMenu.Show();
     // }
 
-    var GameState = {Title:0, Playing: 1};
+    var GameState = {Title:0, Playing: 1, ShowingResult: 2};
     var gameState = GameState.Title;
 
     function dispatchEvent()
@@ -664,6 +672,11 @@
                     break;
                 case GameState.Playing:
                     arm.ToNextState();
+                    break;
+                case GameState.ShowingResult:
+                    resultMenu.Hide();
+                    gameState = GameState.Playing;
+                    scorer.ShowScore();
                     break;
             }
         }
