@@ -677,6 +677,7 @@
                     resultMenu.Hide();
                     gameState = GameState.Playing;
                     scorer.ShowScore();
+                    arm.ToNextState();//TODO:Armの状態をFinish→Setに一回クリックするのが嫌なのでここで呼んでいる。きれいにしたい。
                     break;
             }
         }
