@@ -279,11 +279,13 @@
             if(dartsBoard.hitsBull(pointEdge.y))
             {
                 game.camera.flash(0x0000ff, 200);
-                scorer.HitsBull();                
+                scorer.HitsBull();
+                bullSound.play();                
             }
             else
             {
                 scorer.Miss();
+                missShotSound.play();
             }
         }
         this.refreshImagePosition();
@@ -416,6 +418,8 @@
     var dartShooter;
     var dartsBoard;
     var scorer;
+    var bullSound;
+    var missShotSound;
 
     function preload() {
         game.load.image('foreArm', 'assets/armFig.png');
@@ -424,6 +428,9 @@
         game.load.image('boardBase', 'assets/board.png');
         game.load.image('bull', 'assets/bull.png');
         game.load.image('joint', 'assets/joint.png');
+
+        game.load.audio('bullSound', 'assets/bullSound.wav');
+        game.load.audio('missShotSound', 'assets/missShotSound.wav');
 
         game.time.desiredFps = GAME_FPS;
 
@@ -468,6 +475,8 @@
         arm = new Arm(dartShooter.Shoot.bind(dartShooter));
         dartsBoard = new DartsBoard();
         scorer = new Scorer();
+        bullSound = this.add.audio('bullSound');
+        missShotSound = this.add.audio('missShotSound');
     }
 
     var isClickOn = false;
@@ -502,7 +511,6 @@
         {
             arm.ToNextState();
         }
-
     }
 
     function update() {
