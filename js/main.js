@@ -6,7 +6,7 @@
         return degree * Math.PI / 180 ;
     };
 
-    var GAME_FPS = 45;
+    var GAME_FPS = 60;
 
     var SCREEN_WIDTH = 800;
     var SCREEN_HEIGHT = 480;
