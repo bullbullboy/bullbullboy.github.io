@@ -460,29 +460,36 @@
     };
 
     var scoreForShare = 0;//TODO:もう少しきれいにしろ
-    function tweetScore(){
+    function tweetScore(message, hashtags){
         var uri = "https://twitter.com/intent/tweet"
-        window.open(uri);
-        return;
-
 
         var isJapanese = (window.navigator.userLanguage || window.navigator.language || window.navigator.browserLanguage).substr(0,2) == "ja";
-
-        //share score on twitter        
-        var tweetbegin = 'http://twitter.com/home?status=';
         var tweettxt;
+        var hashtxt =  '2DDarts created by @logical_darts ' 
 
         if(isJapanese)
         {
-            tweettxt = '2D Dartsをプレイして、' + scoreForShare +'回連続でブルに入れました #2DDarts created by @logical_darts ' + window.location.href + ' ';
+            tweettxt = '2D Dartsをプレイして、' + scoreForShare +'回連続でブルに入れました' + window.location.href;
         }
         else
         {
-            tweettxt = 'I got ' + scoreForShare + ' points! #2DDarts created by @logical_darts ' + window.location.href + ' ';
+            var pointText;
+            if(scoreForShare <= 1)
+            {
+                pointText = ' point';
+            }
+            else
+            {
+                pointText = ' points';
+            }
+
+            tweettxt = 'I got ' + scoreForShare + pointText + '! ' + window.location.href + ' ';
         }
-        var finaltweet = tweetbegin +encodeURIComponent(tweettxt);
-        window.open(finaltweet,'_blank');
-        //window.location = "https://twitter.com/intent/tweet"
+
+        uri += '?text=' + tweettxt;
+        uri += '&hashtags=' + hashtxt;
+        window.open(uri);
+        return;
     }
 
     function hideAll(componentList)
