@@ -457,9 +457,21 @@
 
     var scoreForShare = 0;//TODO:もう少しきれいにしろ
     function tweetScore(){
+
+        var isJapanese = (window.navigator.userLanguage || window.navigator.language || window.navigator.browserLanguage).substr(0,2) == "ja";
+
         //share score on twitter        
         var tweetbegin = 'http://twitter.com/home?status=';
-        var tweettxt = '2DDartsで'+ scoreForShare +'回連続でブルに入れました ' + window.location.href + ' #2DDarts created by @logical_darts';
+        var tweettxt;
+
+        if(isJapanese)
+        {
+            tweettxt = scoreForShare +'回連続でブルに入れました #2DDarts created by @logical_darts ' + window.location.href + ' ';
+        }
+        else
+        {
+            tweettxt = 'I got ' + scoreForShare + ' points! #2DDarts created by @logical_darts ' + window.location.href + ' ';
+        }
         var finaltweet = tweetbegin +encodeURIComponent(tweettxt);
         window.open(finaltweet,'_blank');
     }
