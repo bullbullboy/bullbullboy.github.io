@@ -470,7 +470,7 @@
 
         if(isJapanese)
         {
-            tweettxt = scoreForShare +'回連続でブルに入れました #2DDarts created by @logical_darts ' + window.location.href + ' ';
+            tweettxt = '2D Dartsをプレイして、' + scoreForShare +'回連続でブルに入れました #2DDarts created by @logical_darts ' + window.location.href + ' ';
         }
         else
         {
