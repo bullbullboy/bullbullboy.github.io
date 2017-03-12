@@ -461,6 +461,10 @@
 
     var scoreForShare = 0;//TODO:もう少しきれいにしろ
     function tweetScore(){
+        var uri = "https://twitter.com/intent/tweet"
+        window.open(uri);
+        return;
+
 
         var isJapanese = (window.navigator.userLanguage || window.navigator.language || window.navigator.browserLanguage).substr(0,2) == "ja";
 
@@ -478,6 +482,7 @@
         }
         var finaltweet = tweetbegin +encodeURIComponent(tweettxt);
         window.open(finaltweet,'_blank');
+        //window.location = "https://twitter.com/intent/tweet"
     }
 
     function hideAll(componentList)
@@ -529,7 +534,6 @@
         this.twitterButton.inputEnabled = true;
         this.twitterButton.events.onInputUp.add(() => {
             tweetScore();
-            // window.location = "https://twitter.com/intent/tweet"
         });
 
         this.resultMenuComponentList.push(this.twitterButton);
@@ -693,7 +697,6 @@
                     scorer.ShowScore();
                     dartShooter.RemoveAllDart();
                     arm.ToNextState();//TODO:Armの状態をFinish→Setに一回クリックするのが嫌なのでここで呼んでいる。きれいにしたい。
-                    // tweetScore();
                     break;
             }
         }
