@@ -256,7 +256,7 @@
         var MARGIN = 50;
         if (this.x < -MARGIN) return true;
         if (this.x > SCREEN_WIDTH + MARGIN) return true;
-        if (this.y < -MARGIN) return true;
+        if (this.y > SCREEN_HEIGHT + MARGIN) return true;
         return false;
     }
     Dart.prototype.Update = function()
