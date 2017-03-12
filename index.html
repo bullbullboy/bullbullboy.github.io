@@ -379,15 +379,29 @@
         this.scoreBest = 0;
         this.scoreOfContinuousBull = 0;
 
+        this.scoreTextList = new Array();
+
         var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "right", boundsAlignV: "middle" };
         this.scoreBestLabel = game.add.text(0, 0, "BEST", style);
+        this.scoreTextList.push(this.scoreBestLabel);
+
         this.scoreCurrentLabel = game.add.text(0, this.scoreBestLabel.height, "SCORE", style);
+        this.scoreTextList.push(this.scoreCurrentLabel);
 
         var MARGIN_LABEL_TO_SCORELABEL = 60;
         var labelXPos = ((this.scoreBestLabel.width > this.scoreCurrentLabel.width)? 
             this.scoreBestLabel.width : this.scoreCurrentLabel.width )+ MARGIN_LABEL_TO_SCORELABEL;
         this.scoreBestText = game.add.text(labelXPos, 0, "0", style);
+        this.scoreTextList.push(this.scoreBestText);
+
         this.scoreCurrentText = game.add.text(labelXPos, this.scoreBestLabel.height, "0", style);
+        this.scoreTextList.push(this.scoreCurrentText);
+
+        //最初は非表示
+        for(var i = 0; i < this.scoreTextList.length; i++)
+        {
+            this.scoreTextList[i].visible = false;
+        }
     };
 
     Scorer.prototype.HitsBull = function()
@@ -410,6 +424,14 @@
     {
         this.scoreBestText.text = this.scoreBest;
         this.scoreCurrentText.text = this.scoreOfContinuousBull;
+    };
+
+    Scorer.prototype.ShowScore = function()
+    {
+        for(var i = 0; i < this.scoreTextList.length; i++)
+        {
+            this.scoreTextList[i].visible = true;
+        }
     };
     //---------------------------------
     TitleMenu = function()
@@ -546,6 +568,7 @@
         if(isClickOnEdge())
         {
             titleMenu.Hide();//TODO:仮実装
+            scorer.ShowScore();//TODO:仮実装
             arm.ToNextState();
         }
     }
