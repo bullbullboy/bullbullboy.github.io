@@ -446,6 +446,9 @@
         this.tapToStartText = game.add.text(SCREEN_WIDTH/2, SCREEN_HEIGHT * 3 / 4, "Tap To Start", tapToStartStyle);
         this.tapToStartText.anchor = new Phaser.Point(0.5, 0.5);
 
+        this.tapToStartText.alpha = 0.3;
+        game.add.tween(this.tapToStartText).to( { alpha: 1 }, 500, Phaser.Easing.Linear.None, true, 0, 500, true);
+
         // this.titleText.position.x = SCREEN_WIDTH / 2 - this.title
         //this.backGround = new Phaser.Rectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
     };
