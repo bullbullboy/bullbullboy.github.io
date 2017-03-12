@@ -102,6 +102,7 @@
                 break;
             case State.Finished:
                 this.nextState();
+                resultMenu.hide();
                 dartShooter.RemoveGarbageDarts();
                 break;
 
@@ -422,6 +423,7 @@
 
     Scorer.prototype.Miss = function()
     {
+        resultMenu.show(this.scoreOfContinuousBull);
         this.scoreOfContinuousBull = 0;
         this.refresh();
     };
@@ -480,6 +482,69 @@
         window.open(finaltweet,'_blank');
     }
 
+    function hideAll(componentList)
+    {
+        setVisible(componentList, false);
+    }
+
+    function showAll(componentList)
+    {
+        setVisible(componentList, true);
+    }
+
+    function setVisible(componentList, isVisible)
+    {
+        for(var i = 0; i < componentList.length; i++)
+        {
+            componentList[i].visible = isVisible;
+        }
+    }
+
+    //----ResultMenu-------------------------
+    ResultMenu = function()
+    {
+        this.resultMenuComponentList = new Array();
+
+        this.backGroundImg = game.add.image(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, 'resultBackGround');
+        this.resultMenuComponentList.push(this.backGroundImg);
+
+        var smallStyle = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "right", boundsAlignV: "middle" };
+        var normalStyle = { font: "bold 48px Arial", fill: "#fff", boundsAlignH: "right", boundsAlignV: "middle" };
+        var bigStyle = { font: "bold 64px Arial", fill: "#fff", boundsAlignH: "right", boundsAlignV: "middle" };
+        this.yourScoreText = game.add.text(this.backGroundImg.x, 0, "Your score", normalStyle);
+        this.yourScoreText.position.y = this.backGroundImg.y - this.backGroundImg.height/2 + this.yourScoreText.height;
+        this.resultMenuComponentList.push(this.yourScoreText);
+
+        this.bullImg = game.add.image(this.backGroundImg.x - this.backGroundImg.width / 5, this.backGroundImg.y, 'bullCenter');
+        //this.bullImg.scale.setTo(0.6, 0.6);
+        this.resultMenuComponentList.push(this.bullImg);
+
+        this.scoreText = game.add.text(this.backGroundImg.x + 50, this.bullImg.y, "", bigStyle);
+        this.resultMenuComponentList.push(this.scoreText);
+
+        this.retryText = game.add.text(this.backGroundImg.x, 0, "Tap to retry", smallStyle);
+        this.retryText.position.y = this.backGroundImg.y + this.backGroundImg.height / 2 - this.retryText.height,
+        this.resultMenuComponentList.push(this.retryText);
+
+        for(var i = 0; i < this.resultMenuComponentList.length; i++)
+        {
+            this.resultMenuComponentList[i].anchor = new Phaser.Point(0.5, 0.5);
+        }
+        this.hide();
+    };
+
+
+    ResultMenu.prototype.show = function(scoreResult)
+    {
+        this.scoreText.text = 'x ' + scoreResult;
+        showAll(this.resultMenuComponentList);
+    };
+
+    ResultMenu.prototype.hide = function()
+    {
+        hideAll(this.resultMenuComponentList);
+    };
+
     //----main-------------------------
     var game = new Phaser.Game(SCREEN_WIDTH, SCREEN_HEIGHT, Phaser.AUTO, '', { preload: preload, create: create, update: update});
     var titleMenu;
@@ -489,6 +554,7 @@
     var scorer;
     var bullSound;
     var missShotSound;
+    var resultMenu;
 
     function preload() {
         game.load.image('foreArm', 'assets/armFig.png');
@@ -497,7 +563,8 @@
         game.load.image('boardBase', 'assets/board.png');
         game.load.image('bull', 'assets/bull.png');
         game.load.image('doubleBull', 'assets/doubleBull.png');
-
+        game.load.image('resultBackGround', 'assets/resultBackGround.png');
+        game.load.image('bullCenter', 'assets/bullCenter.png');
         game.load.image('joint', 'assets/joint.png');
 
         game.load.audio('bullSound', 'assets/bullSound.wav');
@@ -549,6 +616,7 @@
         bullSound = this.add.audio('bullSound');
         missShotSound = this.add.audio('missShotSound');
         titleMenu = new TitleMenu();
+        resultMenu = new ResultMenu();
 
     }
 
