@@ -348,8 +348,14 @@
         this.boardBaseImg = game.add.image(BOARD_X, BOARD_TOP, 'boardBase');
 
         this.bullImg = game.add.image(0, 0, 'bull');
-        this.bullImg.position.x = this.boardBaseImg.position.x;
+        this.doubleBullImg = game.add.image(0, 0, 'doubleBull');
+
+        this.bullImg.position.x = BOARD_X;
         this.bullImg.position.y = this.boardBaseImg.y + this.boardBaseImg.height / 2 - this.bullImg.height / 2;
+
+        this.doubleBullImg.position.x = BOARD_X;
+        this.doubleBullImg.position.y = this.bullImg.position.y + this.bullImg.height/2 - this.doubleBullImg.height/2;
+
         BOARD_BOTTOM = BOARD_TOP + this.boardBaseImg.height;
         BOARD_RIGHT = BOARD_X + this.boardBaseImg.width;
     };
@@ -465,10 +471,13 @@
 
     // };
 
-    TitleMenuEventDispatcher = function()
-    {
 
-
+    function tweetscore(){        
+        //share score on twitter        
+        var tweetbegin = 'http://twitter.com/home?status=';
+        var tweettxt = 'I scored '+ 100 +' at this game -' + window.location.href + '.';
+        var finaltweet = tweetbegin +encodeURIComponent(tweettxt);
+        window.open(finaltweet,'_blank');
     }
 
     //----main-------------------------
@@ -487,6 +496,8 @@
         game.load.image('dartImg', 'assets/dartImg.png');
         game.load.image('boardBase', 'assets/board.png');
         game.load.image('bull', 'assets/bull.png');
+        game.load.image('doubleBull', 'assets/doubleBull.png');
+
         game.load.image('joint', 'assets/joint.png');
 
         game.load.audio('bullSound', 'assets/bullSound.wav');
@@ -584,7 +595,8 @@
                 case GameState.Title:
                     titleMenu.Hide();   
                     scorer.ShowScore();
-                    gameState = GameState.Playing;                 
+                    gameState = GameState.Playing;
+                    //tweetscore();                 
                     break;
                 case GameState.Playing:
                     arm.ToNextState();
