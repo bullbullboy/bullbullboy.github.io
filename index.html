@@ -465,6 +465,12 @@
 
     // };
 
+    TitleMenuEventDispatcher = function()
+    {
+
+
+    }
+
     //----main-------------------------
     var game = new Phaser.Game(SCREEN_WIDTH, SCREEN_HEIGHT, Phaser.AUTO, '', { preload: preload, create: create, update: update});
     var titleMenu;
@@ -566,13 +572,24 @@
     //     titleMenu.Show();
     // }
 
+    var GameState = {Title:0, Playing: 1};
+    var gameState = GameState.Title;
+
     function dispatchEvent()
     {
         if(isClickOnEdge())
         {
-            titleMenu.Hide();//TODO:仮実装
-            scorer.ShowScore();//TODO:仮実装
-            arm.ToNextState();
+            switch (gameState)
+            {
+                case GameState.Title:
+                    titleMenu.Hide();   
+                    scorer.ShowScore();
+                    gameState = GameState.Playing;                 
+                    break;
+                case GameState.Playing:
+                    arm.ToNextState();
+                    break;
+            }
         }
     }
 
