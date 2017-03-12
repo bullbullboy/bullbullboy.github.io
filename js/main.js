@@ -410,6 +410,10 @@
         this.HideScore();
         resultMenu.Show(this.scoreOfContinuousBull);
         gameState = GameState.ShowingResult;
+
+        startGuardTime();
+
+
         this.scoreOfContinuousBull = 0;
         this.refresh();
     };
@@ -652,14 +656,19 @@
         return isOnEdge;
     }
 
-    // function render()
-    // {
-    //     titleMenu.Show();
-    // }
+    function startGuardTime()
+    {
+        canTouchResultMenu = false;
+        game.time.events.add(Phaser.Timer.SECOND * 0.3, finishedGuardTime, this);
+    }
 
+    function finishedGuardTime()
+    {
+        canTouchResultMenu = true;
+    }
+    var canTouchResultMenu;
     var GameState = {Title:0, Playing: 1, ShowingResult: 2};
     var gameState = GameState.Title;
-
     function dispatchEvent()
     {
         if(isClickOnEdge())
@@ -675,6 +684,10 @@
                     arm.ToNextState();
                     break;
                 case GameState.ShowingResult:
+                    if(!canTouchResultMenu)
+                    {
+                        break;
+                    }
                     resultMenu.Hide();
                     gameState = GameState.Playing;
                     scorer.ShowScore();
