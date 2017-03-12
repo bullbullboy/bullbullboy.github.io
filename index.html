@@ -7,6 +7,7 @@
     <style type="text/css">
         body {
             margin: 0;
+            background: #222222;
         }
     </style>
 </head>
@@ -425,6 +426,40 @@
         game.load.image('joint', 'assets/joint.png');
 
         game.time.desiredFps = GAME_FPS;
+
+        //解像度対応処理.以下を参考にした
+        //http://www.html5gamedevs.com/topic/5949-solution-scaling-for-multiple-devicesresolution-and-screens/
+        if (this.game.device.desktop)
+        {            
+            this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+            this.scale.minWidth = SCREEN_WIDTH/2;
+            this.scale.minHeight = SCREEN_HEIGHT/2;
+            this.scale.maxWidth = SCREEN_WIDTH;
+            this.scale.maxHeight = SCREEN_HEIGHT;
+            this.scale.pageAlignHorizontally = true;
+            this.scale.pageAlignVertically = true;
+            //this.scale.setScreenSize(true);//deprecated.//TODO代わりにrefreshを呼ぶ?
+       }        
+       else
+       {            
+            this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+            this.scale.minWidth = SCREEN_WIDTH/2;
+            this.scale.minHeight = SCREEN_HEIGHT/2;
+            this.scale.maxWidth = 2048; 
+            //You can change this to SCREEN_WIDTH;*2.5 if needed            
+            this.scale.maxHeight = 1228; 
+
+            //Make sure these values are proportional to the SCREEN_WIDTH; and SCREEN_HEIGHT            
+            this.scale.pageAlignHorizontally = true;
+            this.scale.pageAlignVertically = true;
+
+            //違う方向のときに、コールバックを呼んだりしたいときはこの辺を使う
+            // this.scale.forceOrientation(true, false);//有効にすると、フルスクリーンでフィットするのでコメントアウト
+            // this.scale.hasResized.add(this.gameResized, this);
+            // this.scale.enterIncorrectOrientation.add(this.enterIncorrectOrientation, this);
+            // this.scale.leaveIncorrectOrientation.add(this.leaveIncorrectOrientation, this);
+            // //this.scale.setScreenSize(true);//deprecated.//TODO代わりにrefreshを呼ぶ?
+        }
     }
 
     function create() {
