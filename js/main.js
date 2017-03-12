@@ -455,20 +455,12 @@
         this.tapToStartText.visible = false;
     };
 
-    // TitleMenu.prototype.Show = function()
-    // {
-        //game.debug.geom(titleMenu.backGround, '#000000');
-
-    // };
-
-
-    function tweetscore(){        
+    function tweetScore(myScore){        
         //share score on twitter        
         var tweetbegin = 'http://twitter.com/home?status=';
-        var tweettxt = 'I scored '+ 100 +' at this game -' + window.location.href + '.';
+        var tweettxt = '2DDartsで'+ myScore +'回連続でブルに入れました ' + window.location.href + ' #2DDarts @logical_darts';
         var finaltweet = tweetbegin +encodeURIComponent(tweettxt);
         window.open(finaltweet,'_blank');
-        // window.location = "https://twitter.com/intent/tweet";
     }
 
     function hideAll(componentList)
@@ -514,6 +506,12 @@
         this.retryText.position.y = this.backGroundImg.y + this.backGroundImg.height / 2 - this.retryText.height,
         this.resultMenuComponentList.push(this.retryText);
 
+        var SHARE_BUTTON_OFFSET_Y = 80;
+        this.twitterButton = game.add.image(this.backGroundImg.x, this.backGroundImg.y + SHARE_BUTTON_OFFSET_Y, 'twitterLogo');
+        this.twitterButton.scale.setTo(0.1, 0.1);
+
+        this.resultMenuComponentList.push(this.twitterButton);
+
         for(var i = 0; i < this.resultMenuComponentList.length; i++)
         {
             this.resultMenuComponentList[i].anchor = new Phaser.Point(0.5, 0.5);
@@ -554,6 +552,7 @@
         game.load.image('resultBackGround', 'assets/resultBackGround.png');
         game.load.image('bullCenter', 'assets/bullCenter.png');
         game.load.image('joint', 'assets/joint.png');
+        game.load.image('twitterLogo', 'assets/Twitter_Social_Icon_Rounded_Square_Color.png')
 
         game.load.audio('bullSound', 'assets/bullSound.wav');
         game.load.audio('missShotSound', 'assets/missShotSound.wav');
@@ -652,7 +651,6 @@
                     titleMenu.Hide();   
                     scorer.ShowScore();
                     gameState = GameState.Playing;
-                    //tweetscore();                 
                     break;
                 case GameState.Playing:
                     arm.ToNextState();
@@ -663,6 +661,7 @@
                     scorer.ShowScore();
                     dartShooter.RemoveAllDart();
                     arm.ToNextState();//TODO:Armの状態をFinish→Setに一回クリックするのが嫌なのでここで呼んでいる。きれいにしたい。
+                    // tweetScore();
                     break;
             }
         }
