@@ -538,9 +538,7 @@
         this.twitterButton = game.add.image(this.backGroundImg.x, this.backGroundImg.y + SHARE_BUTTON_OFFSET_Y, 'twitterLogo');
         this.twitterButton.scale.setTo(0.15, 0.15);
         this.twitterButton.inputEnabled = true;
-        this.twitterButton.events.onInputUp.add(() => {
-            tweetScore();
-        });
+        this.twitterButton.events.onInputUp.add(tweetScore);
 
         this.resultMenuComponentList.push(this.twitterButton);
 
