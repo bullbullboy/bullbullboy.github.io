@@ -6,7 +6,7 @@
         return degree * Math.PI / 180 ;
     };
 
-    var GAME_FPS = 60;
+    var GAME_FPS = 45;
 
     var SCREEN_WIDTH = 800;
     var SCREEN_HEIGHT = 480;
@@ -23,7 +23,7 @@
     var SHOULDER_POS_Y = 260;
 
     //フォーム調整用    
-    var TIME_RATE = 1;   //全体の速度はここで調整
+    var TIME_RATE = 4/3;   //全体の速度はここで調整
     var SETTING_SHOULDER_ANG_VEL = -1.3 * TIME_RATE;
     var BENDING_ELBOW_ANG_VEL = -3 * TIME_RATE;
     var THROWING_SHOULDER_ANG_VEL = -2 * TIME_RATE;
@@ -31,9 +31,8 @@
 
     var ELBOW_ANGLE_MAX = 175;
 
-
-    var VELOCITY_FIRST = 14;
-    var GRAVITY = 0.2;
+    var VELOCITY_FIRST = 15;
+    var GRAVITY = 0.22;
 
     //Armクラス-----------------------
 
@@ -469,7 +468,7 @@
 
         if(isJapanese)
         {
-            tweettxt = '2D Dartsをプレイして、' + scoreForShare +'回連続でブルに入れました' + window.location.href;
+            tweettxt = '2D Dartsをプレイして、' + scoreForShare +'回連続でブルに入れました ' + window.location.href;
         }
         else
         {
