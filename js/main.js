@@ -455,10 +455,11 @@
         this.tapToStartText.visible = false;
     };
 
-    function tweetScore(myScore){        
+    var scoreForShare = 0;//TODO:もう少しきれいにしろ
+    function tweetScore(){
         //share score on twitter        
         var tweetbegin = 'http://twitter.com/home?status=';
-        var tweettxt = '2DDartsで'+ myScore +'回連続でブルに入れました ' + window.location.href + ' #2DDarts @logical_darts';
+        var tweettxt = '2DDartsで'+ scoreForShare +'回連続でブルに入れました ' + window.location.href + ' #2DDarts created by @logical_darts';
         var finaltweet = tweetbegin +encodeURIComponent(tweettxt);
         window.open(finaltweet,'_blank');
     }
@@ -509,6 +510,11 @@
         var SHARE_BUTTON_OFFSET_Y = 80;
         this.twitterButton = game.add.image(this.backGroundImg.x, this.backGroundImg.y + SHARE_BUTTON_OFFSET_Y, 'twitterLogo');
         this.twitterButton.scale.setTo(0.1, 0.1);
+        this.twitterButton.inputEnabled = true;
+        this.twitterButton.events.onInputUp.add(() => {
+            tweetScore();
+            // window.location = "https://twitter.com/intent/tweet"
+        });
 
         this.resultMenuComponentList.push(this.twitterButton);
 
@@ -522,6 +528,7 @@
 
     ResultMenu.prototype.Show = function(scoreResult)
     {
+        scoreForShare = scoreResult;
         this.scoreText.text = 'x ' + scoreResult;
         showAll(this.resultMenuComponentList);
     };
