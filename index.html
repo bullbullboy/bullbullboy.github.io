@@ -103,6 +103,7 @@
             case State.Finished:
                 this.nextState();
                 resultMenu.hide();
+                scorer.ShowScore();
                 dartShooter.RemoveGarbageDarts();
                 break;
 
@@ -386,18 +387,22 @@
         this.scoreBest = 0;
         this.scoreOfContinuousBull = 0;
 
-        this.scoreTextList = new Array();
+        this.scorerComponentList = new Array();
+
+        var MARGIN_FROM_CORNER = 20;
+        this.bullImg = game.add.image(MARGIN_FROM_CORNER, MARGIN_FROM_CORNER, 'bullCenter');
+        this.bullImg.scale.setTo(0.5, 0.5);
+        this.scorerComponentList.push(this.bullImg);
 
         var style = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "right", boundsAlignV: "middle" };
-        this.scoreCurrentLabel = game.add.text(0, 0, "SCORE", style);
-        this.scoreTextList.push(this.scoreCurrentLabel);
 
-        var MARGIN_LABEL_TO_SCORELABEL = 60;
-        this.scoreCurrentText = game.add.text(this.scoreCurrentLabel.width + 50, this.scoreCurrentLabel.y, "0", style);
-        this.scoreTextList.push(this.scoreCurrentText);
+        this.scoreCurrentText = game.add.text(this.bullImg.width + 50, this.bullImg.position.y, "", style);
+        this.scorerComponentList.push(this.scoreCurrentText);
+
+        this.refresh();
 
         //最初は非表示
-        hideAll(this.scoreTextList);
+        hideAll(this.scorerComponentList);
     };
 
     Scorer.prototype.HitsBull = function()
@@ -412,6 +417,7 @@
 
     Scorer.prototype.Miss = function()
     {
+        this.HideScore();
         resultMenu.show(this.scoreOfContinuousBull);
         this.scoreOfContinuousBull = 0;
         this.refresh();
@@ -419,13 +425,19 @@
 
     Scorer.prototype.refresh = function()
     {
-        this.scoreCurrentText.text = this.scoreOfContinuousBull;
+        this.scoreCurrentText.text = 'x '+this.scoreOfContinuousBull;
     };
 
     Scorer.prototype.ShowScore = function()
     {
-        showAll(this.scoreTextList);
+        showAll(this.scorerComponentList);
     };
+
+    Scorer.prototype.HideScore = function()
+    {
+        hideAll(this.scorerComponentList);
+    };
+
     //---------------------------------
     TitleMenu = function()
     {
@@ -501,7 +513,6 @@
         this.resultMenuComponentList.push(this.yourScoreText);
 
         this.bullImg = game.add.image(this.backGroundImg.x - this.backGroundImg.width / 5, this.backGroundImg.y, 'bullCenter');
-        //this.bullImg.scale.setTo(0.6, 0.6);
         this.resultMenuComponentList.push(this.bullImg);
 
         this.scoreText = game.add.text(this.backGroundImg.x + 50, this.bullImg.y, "", bigStyle);
