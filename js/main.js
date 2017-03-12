@@ -24,8 +24,8 @@
 
     //フォーム調整用    
     var TIME_RATE = 4/3;   //全体の速度はここで調整
-    var SETTING_SHOULDER_ANG_VEL = -1.3 * TIME_RATE;
-    var BENDING_ELBOW_ANG_VEL = -3 * TIME_RATE;
+    var SETTING_SHOULDER_ANG_VEL = -1.1 * TIME_RATE;
+    var BENDING_ELBOW_ANG_VEL = -2.5 * TIME_RATE;
     var THROWING_SHOULDER_ANG_VEL = -2 * TIME_RATE;
     var THROWING_ELBOW_ANG_VEL = 10 * TIME_RATE;
 
