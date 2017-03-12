@@ -298,7 +298,7 @@
     };
 
     //DartShooter----------------------------
-    var DARTS_NUM_MAX_IN_SCREEN = 20;
+    var DARTS_NUM_MAX_IN_SCREEN = 50;
     //TODO:名前。Factory的に作ったが・・・管理もしてるし・・・
     DartShooter = function()
     {
@@ -411,9 +411,38 @@
         this.scoreBestText.text = this.scoreBest;
         this.scoreCurrentText.text = this.scoreOfContinuousBull;
     };
+    //---------------------------------
+    TitleMenu = function()
+    {
+        var titleStyle = { font: "bold 72px Arial", fill: "#fff", boundsAlignH: "right", boundsAlignV: "middle" };
+
+        this.titleText = game.add.text(SCREEN_WIDTH/2, SCREEN_HEIGHT/2, "2DDarts Game", titleStyle);
+        this.titleText.anchor = new Phaser.Point(0.5, 0.5);
+
+        //TODO:PCはClick to Start?
+        var tapToStartStyle = { font: "bold 32px Arial", fill: "#fff", boundsAlignH: "right", boundsAlignV: "middle" };
+        this.tapToStartText = game.add.text(SCREEN_WIDTH/2, SCREEN_HEIGHT * 3 / 4, "Tap To Start", tapToStartStyle);
+        this.tapToStartText.anchor = new Phaser.Point(0.5, 0.5);
+
+        // this.titleText.position.x = SCREEN_WIDTH / 2 - this.title
+        //this.backGround = new Phaser.Rectangle(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    };
+
+    TitleMenu.prototype.Hide = function()
+    {
+        this.titleText.visible = false;
+        this.tapToStartText.visible = false;
+    };
+
+    // TitleMenu.prototype.Show = function()
+    // {
+        //game.debug.geom(titleMenu.backGround, '#000000');
+
+    // };
 
     //----main-------------------------
-    var game = new Phaser.Game(SCREEN_WIDTH, SCREEN_HEIGHT, Phaser.AUTO, '', { preload: preload, create: create, update: update });
+    var game = new Phaser.Game(SCREEN_WIDTH, SCREEN_HEIGHT, Phaser.AUTO, '', { preload: preload, create: create, update: update});
+    var titleMenu;
     var arm;
     var dartShooter;
     var dartsBoard;
@@ -477,6 +506,8 @@
         scorer = new Scorer();
         bullSound = this.add.audio('bullSound');
         missShotSound = this.add.audio('missShotSound');
+        titleMenu = new TitleMenu();
+
     }
 
     var isClickOn = false;
@@ -505,10 +536,16 @@
         return isOnEdge;
     }
 
+    // function render()
+    // {
+    //     titleMenu.Show();
+    // }
+
     function dispatchEvent()
     {
         if(isClickOnEdge())
         {
+            titleMenu.Hide();//TODO:仮実装
             arm.ToNextState();
         }
     }
