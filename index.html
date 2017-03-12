@@ -405,10 +405,7 @@
         this.scoreTextList.push(this.scoreCurrentText);
 
         //最初は非表示
-        for(var i = 0; i < this.scoreTextList.length; i++)
-        {
-            this.scoreTextList[i].visible = false;
-        }
+        hideAll(this.scoreTextList);
     };
 
     Scorer.prototype.HitsBull = function()
@@ -436,10 +433,7 @@
 
     Scorer.prototype.ShowScore = function()
     {
-        for(var i = 0; i < this.scoreTextList.length; i++)
-        {
-            this.scoreTextList[i].visible = true;
-        }
+        showAll(this.scoreTextList);
     };
     //---------------------------------
     TitleMenu = function()
